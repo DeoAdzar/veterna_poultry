@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "147413446050",
+    "project_id": "veterna-poultry-42513",
+    "storage_bucket": "veterna-poultry-42513.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147413446050:android:eb4742ef23163d55d456fb",
+        "android_client_info": {
+          "package_name": "com.example.veterna_poultry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF48tQF-s095cXxq-4wdn8CmX6wTJUbuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
