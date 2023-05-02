@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:veterna_poultry/auth.dart';
-import 'package:veterna_poultry/pages/navigation/nav_bar.dart';
-import 'package:veterna_poultry/pages/forget_password_page.dart';
-import 'package:veterna_poultry/pages/register_page.dart';
+import '../db/auth.dart';
 import 'package:veterna_poultry/utils/dimen.dart';
 import 'package:veterna_poultry/utils/my_colors.dart';
+import 'package:veterna_poultry/utils/pages.dart';
+import 'package:veterna_poultry/utils/validation_input.dart';
 import 'package:veterna_poultry/widgets/button_blue_radius_25.dart';
 import 'package:veterna_poultry/widgets/input_text.dart';
 import 'package:veterna_poultry/widgets/input_text_password.dart';
+import 'package:veterna_poultry/widgets/show_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,36 +19,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String? errorMessage = '';
-  bool isLogin = true;
-
   //ini buat bikin controller text nya
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-
   //ini buat manggil class yang ada di auth.dart buat login
+
   Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth()
-          .signInWithEmailAndPassword(
-              email: _controllerEmail.text, password: _controllerPassword.text)
-          .then((value) {
-        //ini kondisi kalo login sukses, dia bakal pindah ke NavBar(main menu)
-        print("Login Success");
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => NavBar()));
-      }).onError((error, stackTrace) {
-        print("error ${error.toString()}");
-      });
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
+    await Auth().signInWithEmailAndPassword(
+        context: context,
+        email: _controllerEmail.text,
+        password: _controllerPassword.text);
+  }
+
+  bool validation(String email, String password) {
+    return ValidationInput.validationInputNotEmpty(_controllerEmail.text) &&
+        ValidationInput.validationInputNotEmpty(_controllerPassword.text) &&
+        ValidationInput.isEmailValid(_controllerEmail.text);
+  }
+
+  void showErrorSnackbar(String email, String password) {
+    if (email.isEmpty) {
+      ShowSnackbar.snackBarError('Email is required');
+    } else if (!ValidationInput.isEmailValid(email)) {
+      ShowSnackbar.snackBarError('Must be a valid email address');
+    } else if (password.isEmpty) {
+      ShowSnackbar.snackBarError('Password is required');
     }
   }
 
-  Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'Ups! ? $errorMessage');
+  @override
+  void dispose() {
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(
                   //ini manggil class dimen biar jaraknya responsive
-                  height: dimen(context).height * 0.12,
+                  height: Dimen(context).height * 0.12,
                 ),
                 Container(
                   alignment: Alignment.center,
@@ -76,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold)),
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.12,
+                  height: Dimen(context).height * 0.12,
                 ),
                 //ini class dari input_text.dart terus diisi parameternya
                 InputText(
@@ -87,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   verticalCenter: false,
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 //ini class dari input_text_password.dart terus diisi parameternya
                 InputTextPassword(
@@ -95,49 +98,58 @@ class _LoginPageState extends State<LoginPage> {
                   text: "Masukan Password",
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.07,
+                  height: Dimen(context).height * 0.07,
                 ),
                 //ini class dari button rounded
                 ButtonBlueRadius25(
                   text: "Login",
                   onTap: () {
-                    //on tap nya aku isi nampilin loading pake showDialog
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) {
-                          return Dialog(
-                            // The background color
-                            backgroundColor: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                  // The loading indicator
-                                  CircularProgressIndicator(),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  // Some text
-                                  Text('Loading...')
-                                ],
+                    Get.closeCurrentSnackbar();
+                    if (validation(
+                        _controllerEmail.text, _controllerPassword.text)) {
+                      //ini buat manggil class yang diatas tadi buat login
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) {
+                            return Dialog(
+                              // The background colordire
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    // The loading indicator
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    // Some text
+                                    Text('Loading...')
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        });
-                    //ini buat manggil class yang diatas tadi buat login
-                    signInWithEmailAndPassword();
+                            );
+                          });
+                      signInWithEmailAndPassword();
+                    } else {
+                      showErrorSnackbar(
+                          _controllerEmail.text, _controllerPassword.text);
+                    }
+                    //on tap nya aku isi nampilin loading pake showDialog
                   },
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 Container(
                   alignment: Alignment.center,
                   child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ForgotPage())),
+                    onTap: () {
+                      Get.toNamed(AppPages.FORGOT_PASSWORD);
+                    },
                     child: Text(
                       'Lupa Password?',
                       style: GoogleFonts.inter(
@@ -148,34 +160,31 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.08,
+                  height: Dimen(context).height * 0.08,
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Belum Punya Akun? ',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Belum Punya Akun? ',
+                      style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(AppPages.REGISTER);
+                      },
+                      child: Text(
+                        'Daftar',
                         style: GoogleFonts.inter(
-                            color: Colors.black,
+                            color: Colors.red,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
-                      InkWell(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterPage())),
-                        child: Text(
-                          'Daftar',
-                          style: GoogleFonts.inter(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 )
               ],
             ),

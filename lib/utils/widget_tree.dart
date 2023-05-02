@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:veterna_poultry/auth.dart';
 import 'package:veterna_poultry/pages/navigation/nav_bar.dart';
-import 'pages/login_page.dart';
+import '../db/auth.dart';
+import '../pages/login_page.dart';
 
 //class widget tree ini buat ngecheck klo user udah pernah login atau belum di device itu
 
@@ -20,9 +20,9 @@ class _WidgetTreeState extends State<WidgetTree> {
       builder: (context, snapshot) {
         //ini fungsi check nya, klo dia ada data nya dia langsung masuk ke navbar (main menu), klo kosong datanya dia masuknya ke login page
         if (snapshot.hasData) {
-          return NavBar();
+          return const NavBar();
         } else {
-          return LoginPage();
+          return const LoginPage();
         }
       },
     );

@@ -12,13 +12,15 @@ class InputText extends StatelessWidget {
       required this.text,
       required this.textInputType,
       required this.height,
-      required this.verticalCenter})
+      required this.verticalCenter,
+      this.validator})
       : super(key: key);
   final TextEditingController controller;
   final String text;
   final double height;
   final bool verticalCenter;
   final TextInputType textInputType;
+  final FormFieldValidator<String>? validator;
 
   TextAlignVertical textVertical() {
     return verticalCenter ? TextAlignVertical.center : TextAlignVertical.top;
@@ -37,6 +39,7 @@ class InputText extends StatelessWidget {
             BoxShadow(color: MyColors.mainColor.withOpacity(0.2), blurRadius: 7)
           ]),
       child: TextFormField(
+        validator: validator,
         controller: controller,
         textAlign: TextAlign.start,
         textAlignVertical: textVertical(),
@@ -49,7 +52,7 @@ class InputText extends StatelessWidget {
             hintText: text,
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
-            hintStyle: TextStyle(height: 1)),
+            hintStyle: const TextStyle(height: 1)),
       ),
     );
   }

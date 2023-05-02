@@ -8,29 +8,32 @@ import '../utils/my_colors.dart';
 
 class InputTextPassword extends StatefulWidget {
   const InputTextPassword(
-      {Key? key, required this.controller, required this.text})
+      {Key? key, required this.controller, required this.text, this.validator})
       : super(key: key);
   // ini buat ngasih parameter
   final TextEditingController controller;
   final String text;
+  final FormFieldValidator<String>? validator;
   @override
   State<InputTextPassword> createState() =>
-      _InputTextPasswordState(controller, text);
+      _InputTextPasswordState(controller, text, validator);
 }
 
 class _InputTextPasswordState extends State<InputTextPassword> {
   final TextEditingController controller;
   final String text;
+  final FormFieldValidator<String>? validator;
   final textFieldFocusNode = FocusNode();
 
-  _InputTextPasswordState(this.controller, this.text);
+  _InputTextPasswordState(this.controller, this.text, this.validator);
   bool _obscureText = true;
   //fungsi ini buat focus, jadi kalo input text nya di klik icon hide show nya ikut focus
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
-      if (textFieldFocusNode.hasPrimaryFocus)
-        return; // If focus is on text field, dont unfocus
+      if (textFieldFocusNode.hasPrimaryFocus) {
+        return;
+      } // If focus is on text field, dont unfocus
       textFieldFocusNode.canRequestFocus =
           false; // Prevents focus if tap on eye
     });
@@ -53,6 +56,7 @@ class _InputTextPasswordState extends State<InputTextPassword> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextFormField(
+              validator: validator,
               controller: controller,
               textAlign: TextAlign.start,
               keyboardType: TextInputType.text,
@@ -78,7 +82,7 @@ class _InputTextPasswordState extends State<InputTextPassword> {
                       ),
                     ),
                   ),
-                  hintStyle: TextStyle(height: 1)),
+                  hintStyle: const TextStyle(height: 1)),
             ),
           ],
         ));

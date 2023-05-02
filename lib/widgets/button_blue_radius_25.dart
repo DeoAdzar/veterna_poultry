@@ -13,7 +13,7 @@ class ButtonBlueRadius25 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 25, right: 25),
+      margin: const EdgeInsets.only(left: 25, right: 25),
       child: InkWell(
         //fungsi on tap nya di parsing dari parameter
         onTap: onTap,

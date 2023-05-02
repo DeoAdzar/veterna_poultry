@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:veterna_poultry/pages/navigation/chart_page.dart';
+import 'package:get/get.dart';
+import 'package:veterna_poultry/pages/navigation/product_page.dart';
 import 'package:veterna_poultry/pages/navigation/chat_page.dart';
 import 'package:veterna_poultry/pages/navigation/home_page.dart';
 import 'package:veterna_poultry/pages/navigation/profile_page.dart';
 import 'package:veterna_poultry/utils/my_colors.dart';
+
+import '../controller/product_controller.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -14,12 +17,13 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   List pages = [
-    HomePage(),
-    ChatPage(),
-    ChartPage(),
-    ProfilePage(),
+    const HomePage(),
+    const ChatPage(),
+    const ProductsPage(),
+    const ProfilePage(),
   ];
   int currentIndex = 0;
+  final ProductController cartController = Get.put(ProductController());
 
   void onTap(int index) {
     setState(() {
@@ -32,7 +36,7 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25),
               topRight: Radius.circular(25),
@@ -45,7 +49,7 @@ class _NavBarState extends State<NavBar> {
               )
             ]),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(25),
             topRight: Radius.circular(25),
           ),
@@ -61,7 +65,7 @@ class _NavBarState extends State<NavBar> {
             showSelectedLabels: false,
             showUnselectedLabels: false,
             elevation: 0,
-            items: [
+            items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
               BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chat"),
               BottomNavigationBarItem(

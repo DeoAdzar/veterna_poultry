@@ -1,14 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:veterna_poultry/pages/login_page.dart';
-import 'package:veterna_poultry/pages/navigation/nav_bar.dart';
 import 'package:veterna_poultry/widgets/input_text.dart';
 
-import '../auth.dart';
+import '../db/auth.dart';
 import '../utils/dimen.dart';
+import '../utils/validation_input.dart';
 import '../widgets/button_blue_radius_25.dart';
 import '../widgets/input_text_password.dart';
+import '../widgets/show_snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -29,26 +28,51 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _controllerAddress = TextEditingController();
 
   Future<void> createUserWithEmailAndPassword() async {
-    try {
-      await Auth()
-          .createUserWithEmailAndPassword(
-              email: _controllerEmail.text, password: _controllerPassword.text)
-          .then((value) {
-        print("Created Account Success");
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => NavBar()));
-      }).onError((error, stackTrace) {
-        print("error ${error.toString()}");
-      });
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
+    await Auth().createUserWithEmailAndPassword(
+      context: context,
+      address: _controllerAddress.text,
+      phone: _controllerPhone.text,
+      email: _controllerEmail.text,
+      password: _controllerConfirmPassword.text,
+      name: _controllerName.text,
+    );
   }
 
-  Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'Ups! ? $errorMessage');
+  bool validation() {
+    return ValidationInput.validationInputNotEmpty(_controllerEmail.text) &&
+        ValidationInput.validationInputNotEmpty(_controllerPassword.text) &&
+        ValidationInput.validationInputNotEmpty(
+            _controllerConfirmPassword.text) &&
+        ValidationInput.validationInputNotEmpty(_controllerAddress.text) &&
+        ValidationInput.validationInputNotEmpty(_controllerName.text) &&
+        ValidationInput.validationInputNotEmpty(_controllerPhone.text) &&
+        ValidationInput.isConfirmPasswordMatch(
+            _controllerPassword.text, _controllerConfirmPassword.text) &&
+        ValidationInput.isPhoneValid(_controllerPhone.text) &&
+        ValidationInput.isEmailValid(_controllerEmail.text);
+  }
+
+  void showErrorSnackbar() {
+    if (_controllerName.text.isEmpty) {
+      ShowSnackbar.snackBarError('Name is required');
+    } else if (_controllerEmail.text.isEmpty) {
+      ShowSnackbar.snackBarError('Email is required');
+    } else if (!ValidationInput.isEmailValid(_controllerEmail.text)) {
+      ShowSnackbar.snackBarError('Must be a valid email address');
+    } else if (_controllerPhone.text.isEmpty) {
+      ShowSnackbar.snackBarError('Phone is required');
+    } else if (!ValidationInput.isPhoneValid(_controllerPhone.text)) {
+      ShowSnackbar.snackBarError('Please enter valid mobile number');
+    } else if (_controllerPassword.text.isEmpty) {
+      ShowSnackbar.snackBarError('Password is required');
+    } else if (_controllerConfirmPassword.text.isEmpty) {
+      ShowSnackbar.snackBarError('Confirm Password is required');
+    } else if (_controllerAddress.text.isEmpty) {
+      ShowSnackbar.snackBarError('Address is required');
+    } else if (!ValidationInput.isConfirmPasswordMatch(
+        _controllerPassword.text, _controllerConfirmPassword.text)) {
+      ShowSnackbar.snackBarError('Confirm Password doesn\'t match');
+    }
   }
 
   @override
@@ -63,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: dimen(context).height * 0.05,
+                  height: Dimen(context).height * 0.05,
                 ),
                 Container(
                   alignment: Alignment.center,
@@ -75,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontWeight: FontWeight.bold)),
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.05,
+                  height: Dimen(context).height * 0.05,
                 ),
                 InputText(
                   controller: _controllerName,
@@ -85,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   verticalCenter: false,
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 InputText(
                   controller: _controllerEmail,
@@ -95,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   verticalCenter: false,
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 InputText(
                   controller: _controllerPhone,
@@ -105,21 +129,21 @@ class _RegisterPageState extends State<RegisterPage> {
                   verticalCenter: false,
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 InputTextPassword(
                   controller: _controllerPassword,
                   text: "Buat Password",
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 InputTextPassword(
                   controller: _controllerConfirmPassword,
                   text: "Ulangi Password",
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.02,
+                  height: Dimen(context).height * 0.02,
                 ),
                 InputText(
                   controller: _controllerAddress,
@@ -129,12 +153,43 @@ class _RegisterPageState extends State<RegisterPage> {
                   verticalCenter: true,
                 ),
                 SizedBox(
-                  height: dimen(context).height * 0.04,
+                  height: Dimen(context).height * 0.04,
                 ),
                 ButtonBlueRadius25(
                   text: "Daftar",
                   onTap: () {
-                    createUserWithEmailAndPassword();
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    if (validation()) {
+                      //ini buat manggil class yang diatas tadi buat login
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) {
+                            return Dialog(
+                              // The background colordire
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    // The loading indicator
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    // Some text
+                                    Text('Loading...')
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                      createUserWithEmailAndPassword();
+                    } else {
+                      showErrorSnackbar();
+                    }
                   },
                 ),
               ],

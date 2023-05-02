@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 // class ini buat ambil dimensi layar hp biar layout nya responsive ke semua hp, jadi class ini dipanggil di semua layout
-class dimen {
+class Dimen {
   BuildContext context;
 
-  dimen(this.context) : assert(context != null);
+  Dimen(this.context);
 
   //bagian ini yang dipanggil nanti
   double get width => MediaQuery.of(context).size.width;

@@ -40,8 +40,23 @@ dependencies:
   google_fonts: ^4.0.3
   permission_handler: ^9.2.0
   pinput: ^2.2.21
+  firebase_storage: ^11.0.16
+  get: ^4.6.5
+  flutter_native_splash: ^2.2.9
+  image_picker: ^0.8.7+1
+  flutter_svg: ^1.1.6
+  carousel_slider: ^4.2.1
 
-
+flutter_native_splash:
+  color: "#223f93"
+  image: assets/icon8.png
+  fullscreen: true
+  android: true
+  android_12:
+    image: assets/icon8.png
+    color: "#223f93"
+  ios: false
+  web: false
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,10 +80,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-
+  assets:
+    - assets/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

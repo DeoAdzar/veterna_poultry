@@ -1,7 +1,10 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:veterna_poultry/auth.dart';
-import 'package:veterna_poultry/pages/login_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:veterna_poultry/widgets/show_snackbar.dart';
+
+import '../../utils/dimen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,42 +15,124 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   //ini buat ambil data user yang udah login
-  final User? user = Auth().currentUser;
+  final List<String> _carouselImage = [];
 
-  // ini buat manggil fungsi logout dari auth
-  Future<void> signOut() async {
-    await Auth().signOut().then((value) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage())));
+  fetchCarouselImage() async {
+    QuerySnapshot contentCollection =
+        await FirebaseFirestore.instance.collection("content").get();
+    if (mounted) {
+      setState(() {
+        for (var i = 0; i < contentCollection.docs.length; i++) {
+          _carouselImage.add(contentCollection.docs[i]["path"]);
+        }
+      });
+    }
+
+    return contentCollection.docs;
   }
 
-  //ini nampilkan userid dari account yang login, bakalan dipanggil di bawah
-  Widget _userUid() {
-    return Text(user?.uid ?? 'User Id');
+  @override
+  void dispose() {
+    super.dispose();
   }
 
-  // ini buat bikin widget signout sama manggil fungsi signout tadi
-  Widget _signOutButton() {
-    return ElevatedButton(
-      onPressed: signOut,
-      child: const Text('Sign Out'),
-    );
+  @override
+  void initState() {
+    fetchCarouselImage();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            //widget yang di atas dipanggil disini
-            _userUid(),
-            _signOutButton(),
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(top: 10, right: 10),
+            child: IconButton(
+              onPressed: (() {
+                ShowSnackbar.snackBarNormal("Notification");
+              }),
+              icon: const Icon(Icons.notifications),
+              iconSize: 28,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  //ini manggil class dimen biar jaraknya responsive
+                  height: Dimen(context).height * 0.01,
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Selamat Datang",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold)),
+                ),
+                SizedBox(
+                  //ini manggil class Dimen biar jaraknya responsive
+                  height: Dimen(context).height * 0.03,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(18),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(45.0),
+                      child: const Image(
+                        image: AssetImage('assets/thumbnail.png'),
+                      )),
+                ),
+                SizedBox(
+                  //ini manggil class Dimen biar jaraknya responsive
+                  height: Dimen(context).height * 0.01,
+                ),
+                AspectRatio(
+                  aspectRatio: 10 / 5,
+                  child: CarouselSlider(
+                      items: _carouselImage
+                          .map((item) => Container(
+                                decoration: const BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10.0)),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Image.network(
+                                          item,
+                                          fit: BoxFit.contain,
+                                          width: Dimen(context).width,
+                                        ),
+                                      ],
+                                    )),
+                              ))
+                          .toList(),
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        aspectRatio: 2.0,
+                        enlargeCenterPage: true,
+                        autoPlayInterval: const Duration(seconds: 3),
+                      )),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
