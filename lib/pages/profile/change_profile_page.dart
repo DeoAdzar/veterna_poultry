@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:veterna_poultry/widgets/button_blue_radius_25.dart';
 
 import '../../db/auth.dart';
 import '../../db/database_methods.dart';
 import '../../utils/dimen.dart';
-import '../../utils/pages.dart';
-import '../../widgets/button_grey_radius_20_icon.dart';
 import '../../widgets/input_text.dart';
 import '../../widgets/show_snackbar.dart';
 
