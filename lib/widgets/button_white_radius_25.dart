@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:veterna_poultry/utils/my_colors.dart';
 
 //class ini buat bikin button biru yang punya rounded, ada parameter nya buat fungsi onTap sama ngasih nama button nya
 

@@ -5,8 +5,6 @@ import 'package:veterna_poultry/pages/controller/cart_controller.dart';
 import 'package:veterna_poultry/pages/controller/product_controller.dart';
 import 'package:veterna_poultry/utils/dimen.dart';
 
-import '../show_snackbar.dart';
-
 class CatalogProducts extends StatelessWidget {
   final cartController = Get.put(CartController());
   CatalogProducts({Key? key}) : super(key: key);
