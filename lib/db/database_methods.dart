@@ -5,6 +5,8 @@ CollectionReference userCollection =
     FirebaseFirestore.instance.collection("users");
 
 class DatabaseMethod {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future addUserInfoToDB(String? user, Map<String, dynamic> userInfoMap) {
     return FirebaseFirestore.instance
         .collection("users")

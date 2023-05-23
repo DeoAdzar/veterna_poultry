@@ -46,23 +46,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(top: 10, right: 10),
-            child: IconButton(
-              onPressed: (() {
-                ShowSnackbar.snackBarNormal("Notification");
-              }),
-              icon: const Icon(Icons.notifications),
-              iconSize: 28,
-              color: Colors.black,
-            ),
-          )
-        ],
-      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
@@ -73,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SizedBox(
                   //ini manggil class dimen biar jaraknya responsive
-                  height: Dimen(context).height * 0.01,
+                  height: Dimen(context).height * 0.05,
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -81,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                           color: Colors.black,
-                          fontSize: 20.0,
+                          fontSize: 30.0,
                           fontWeight: FontWeight.bold)),
                 ),
                 SizedBox(

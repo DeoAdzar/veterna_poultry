@@ -6,7 +6,6 @@ import '../utils/my_colors.dart';
 
 class ShowSnackbar {
   static snackBarError(String message) {
-    Get.closeAllSnackbars();
     Get.rawSnackbar(
         messageText: Text(
           message,
@@ -20,13 +19,12 @@ class ShowSnackbar {
         snackPosition: SnackPosition.TOP,
         borderRadius: 10,
         margin: const EdgeInsets.all(10),
-        isDismissible: true,
-        duration: const Duration(seconds: 2),
-        forwardAnimationCurve: Curves.easeOutBack);
+        isDismissible: true);
+    // duration: const Duration(seconds: 2),
+    // forwardAnimationCurve: Curves.fastOutSlowIn);
   }
 
   static snackBarSuccess(String message) {
-    Get.closeAllSnackbars();
     Get.rawSnackbar(
         messageText: Text(
           message,
@@ -40,13 +38,12 @@ class ShowSnackbar {
         snackPosition: SnackPosition.TOP,
         borderRadius: 10,
         margin: const EdgeInsets.all(10),
-        isDismissible: true,
-        duration: const Duration(seconds: 2),
-        forwardAnimationCurve: Curves.easeOutBack);
+        isDismissible: true);
+    // duration: const Duration(seconds: 2),
+    // forwardAnimationCurve: Curves.fastOutSlowIn);
   }
 
   static snackBarNormal(String message) {
-    Get.closeAllSnackbars();
     Get.rawSnackbar(
         messageText: Text(
           message,
@@ -60,8 +57,8 @@ class ShowSnackbar {
         snackPosition: SnackPosition.TOP,
         borderRadius: 10,
         margin: const EdgeInsets.all(10),
-        isDismissible: true,
-        duration: const Duration(seconds: 2),
-        forwardAnimationCurve: Curves.easeOutBack);
+        isDismissible: true);
+    // duration: const Duration(seconds: 2),
+    // forwardAnimationCurve: Curves.fastOutSlowIn);
   }
 }

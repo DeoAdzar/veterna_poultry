@@ -79,17 +79,14 @@ class _ForgotPageState extends State<ForgotPage> {
               SizedBox(
                 height: Dimen(context).height * 0.06,
               ),
-              Container(
-                alignment: Alignment.center,
-                child: Flexible(
-                  child: Text(
-                      "Hai, anda lupa password? Silahkan ketik Email yang telah anda daftarkan dan kami akan mengirimkan password baru anda.",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal)),
-                ),
+              Flexible(
+                child: Text(
+                    "Hai, anda lupa password? Silahkan ketik Email yang telah anda daftarkan dan kami akan mengirimkan password baru anda.",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal)),
               ),
               SizedBox(
                 height: Dimen(context).height * 0.07,

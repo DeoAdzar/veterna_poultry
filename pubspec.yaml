@@ -38,7 +38,7 @@ dependencies:
   firebase_auth: ^4.3.0
   cloud_firestore: ^4.4.5
   google_fonts: ^4.0.3
-  permission_handler: ^9.2.0
+  permission_handler: ^10.2.0
   pinput: ^2.2.21
   firebase_storage: ^11.0.16
   get: ^4.6.5
@@ -46,6 +46,9 @@ dependencies:
   image_picker: ^0.8.7+1
   flutter_svg: ^1.1.6
   carousel_slider: ^4.2.1
+  badges: ^3.1.1
+  uuid: ^3.0.7
+  intl: ^0.17.0
 
 flutter_native_splash:
   color: "#223f93"

@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:veterna_poultry/pages/controller/product_controller.dart';
@@ -15,20 +12,22 @@ class CartProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => SizedBox(
-          height: 600,
-          child: ListView.builder(
-            itemCount: controller.products.length,
-            itemBuilder: (BuildContext context, int index) {
-              return CartProductCard(
-                controller: controller,
-                product: controller.products.keys.toList()[index],
-                quantity: controller.products.values.toList()[index],
-                index: index,
-              );
-            },
-          ),
-        ));
+    return Obx(
+      () => SizedBox(
+        height: 600,
+        child: ListView.builder(
+          itemCount: controller.products.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CartProductCard(
+              controller: controller,
+              product: controller.products.keys.toList()[index],
+              quantity: controller.products.values.toList()[index],
+              index: index,
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 
@@ -78,7 +77,7 @@ class CartProductCard extends StatelessWidget {
                   height: Dimen(context).height * 0.02,
                 ),
                 Text(
-                  '${product.price}',
+                  'Rp.${product.price}',
                   style: GoogleFonts.inter(fontSize: 14, color: Colors.black),
                 ),
               ],
@@ -87,7 +86,6 @@ class CartProductCard extends StatelessWidget {
           IconButton(
             onPressed: () {
               controller.removeProduct(product);
-              controller.decQuantity();
             },
             icon: Icon(Icons.remove_circle),
           ),
@@ -98,7 +96,6 @@ class CartProductCard extends StatelessWidget {
           IconButton(
             onPressed: () {
               controller.addProduct(product);
-              controller.incQuantity();
             },
             icon: Icon(Icons.add_circle),
           ),

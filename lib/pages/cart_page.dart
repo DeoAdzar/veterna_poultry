@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import '../widgets/shop/cart_products.dart';
 import '../widgets/shop/cart_total.dart';
 

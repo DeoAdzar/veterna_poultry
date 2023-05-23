@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:veterna_poultry/pages/cart_page.dart';
+import 'package:veterna_poultry/pages/chat_room.dart';
 import 'package:veterna_poultry/pages/forget_password_page.dart';
 import 'package:veterna_poultry/pages/login_page.dart';
 import 'package:veterna_poultry/pages/navigation/nav_bar.dart';
@@ -17,6 +18,7 @@ class AppRoutes {
     GetPage(name: PagePath.FORGOT_PASSWORD, page: () => const ForgotPage()),
     GetPage(name: PagePath.REGISTER, page: () => const RegisterPage()),
     GetPage(name: PagePath.WIDGET_TREE, page: () => const WidgetTree()),
+    GetPage(name: PagePath.CHAT_ROOM, page: () => ChatroomPage()),
     GetPage(name: PagePath.CART_PRODUCTS, page: () => const CartPage()),
     GetPage(
         name: PagePath.CHANGE_PROFILE, page: () => const ChangeProfilePage()),

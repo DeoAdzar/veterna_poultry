@@ -20,27 +20,4 @@ class Product {
 
     return product;
   }
-
-  // static const List<Product> products = [
-  //   Product(
-  //     title: 'barang 1',
-  //     price: 20000,
-  //     image_path: "https://picsum.photos/id/1/300/300",
-  //   ),
-  //   Product(
-  //     title: 'barang 2',
-  //     price: 12000,
-  //     image_path: "https://picsum.photos/id/3/300/300",
-  //   ),
-  //   Product(
-  //     title: 'barang 3',
-  //     price: 10700,
-  //     image_path: "https://picsum.photos/id/5/300/300",
-  //   ),
-  //   Product(
-  //     title: 'barang 4',
-  //     price: 14200,
-  //     image_path: "https://picsum.photos/id/7/300/300",
-  //   ),
-  // ];
 }

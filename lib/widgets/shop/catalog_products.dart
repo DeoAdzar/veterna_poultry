@@ -63,7 +63,7 @@ class CatalogProductCard extends StatelessWidget {
                   height: Dimen(context).height * 0.02,
                 ),
                 Text(
-                  '${cartController.products[index].price}',
+                  'Rp.${cartController.products[index].price}',
                   style: GoogleFonts.inter(fontSize: 14, color: Colors.black),
                 ),
               ],
@@ -71,10 +71,8 @@ class CatalogProductCard extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
+              Get.closeCurrentSnackbar();
               productController.addProduct(cartController.products[index]);
-              productController.incQuantity();
-              ShowSnackbar.snackBarSuccess(
-                  "Berhasil menambahkan ${cartController.products[index].title} ke keranjang");
             },
             icon: Icon(Icons.add_shopping_cart_outlined),
           )

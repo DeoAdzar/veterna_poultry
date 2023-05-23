@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:veterna_poultry/db/database_methods.dart';
 import 'package:veterna_poultry/pages/model/product_model.dart';
 import 'package:veterna_poultry/widgets/show_snackbar.dart';
-
-import 'cart_controller.dart';
 
 class ProductController extends GetxController {
   final _products = {}.obs;
@@ -12,9 +8,19 @@ class ProductController extends GetxController {
 
   void addProduct(Product product) {
     if (_products.containsKey(product)) {
-      _products[product] += 1;
+      if (_products[product] <= 4) {
+        _products[product] += 1;
+        incQuantity();
+        ShowSnackbar.snackBarSuccess(
+            "Berhasil menambahkan ${product.title} keranjang");
+      } else {
+        ShowSnackbar.snackBarError("Item dalam maksimal pembelian");
+      }
     } else {
       _products[product] = 1;
+      incQuantity();
+      ShowSnackbar.snackBarSuccess(
+          "Berhasil menambahkan ${product.title} keranjang");
     }
   }
 
@@ -26,6 +32,7 @@ class ProductController extends GetxController {
     } else {
       _products[product] -= 1;
     }
+    decQuantity();
   }
 
   get quantity => _quantity;

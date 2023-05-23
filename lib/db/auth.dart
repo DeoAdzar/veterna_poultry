@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,24 @@ class Auth {
           email: email, password: password);
       ShowSnackbar.snackBarNormal('Login Successfully');
       Get.offAllNamed(AppPages.HOME);
+      // FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(currentUser!.uid)
+      //     .get()
+      //     .then(
+      //   (DocumentSnapshot documentSnapshot) {
+      //     if (documentSnapshot.exists) {
+      //       if (documentSnapshot.get('role') == "user") {
+      //         ShowSnackbar.snackBarNormal('Login Successfully');
+      //         Get.offAllNamed(AppPages.HOME);
+      //       } else {
+      //         ShowSnackbar.snackBarNormal('You aren\'t user');
+      //         _firebaseAuth.signOut();
+      //         Get.offAllNamed(AppPages.LOGIN);
+      //       }
+      //     }
+      //   },
+      // );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       ShowSnackbar.snackBarError(e.message.toString());
@@ -49,7 +68,9 @@ class Auth {
       Map<String, dynamic> userInfoMap = {
         "name": name,
         "phone": phone,
-        "address": address
+        "address": address,
+        "img_path": null,
+        "role": "user"
       };
 
       DatabaseMethod().addUserInfoToDB(currentUser!.uid, userInfoMap);

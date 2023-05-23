@@ -7,6 +7,7 @@ class AppPages {
   static const WIDGET_TREE = PagePath.REGISTER;
   static const CHANGE_PROFILE = PagePath.CHANGE_PROFILE;
   static const CHANGE_PASSWORD = PagePath.CHANGE_PASSWORD;
+  static const CHAT_ROOM = PagePath.CHAT_ROOM;
 }
 
 abstract class PagePath {
@@ -18,4 +19,5 @@ abstract class PagePath {
   static const CHANGE_PROFILE = '/change-profile';
   static const CHANGE_PASSWORD = '/change-password';
   static const WIDGET_TREE = '/widget-tree';
+  static const CHAT_ROOM = '/chat-room';
 }
