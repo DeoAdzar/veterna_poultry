@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:veterna_poultry/pages/controller/product_controller.dart';
 import 'package:veterna_poultry/pages/model/product_model.dart';
+import 'package:veterna_poultry/utils/currency_format.dart';
 
 import '../../utils/dimen.dart';
 
@@ -59,7 +60,7 @@ class CartProductCard extends StatelessWidget {
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: Image(
-                  image: NetworkImage(product.img_path),
+                  image: NetworkImage(product.imgPath),
                 )),
           ),
           SizedBox(
@@ -77,7 +78,7 @@ class CartProductCard extends StatelessWidget {
                   height: Dimen(context).height * 0.02,
                 ),
                 Text(
-                  'Rp.${product.price}',
+                  CurrencyFormat.convertToIdr(product.price),
                   style: GoogleFonts.inter(fontSize: 14, color: Colors.black),
                 ),
               ],

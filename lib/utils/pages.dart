@@ -8,6 +8,8 @@ class AppPages {
   static const CHANGE_PROFILE = PagePath.CHANGE_PROFILE;
   static const CHANGE_PASSWORD = PagePath.CHANGE_PASSWORD;
   static const CHAT_ROOM = PagePath.CHAT_ROOM;
+  static const CHECKOUT_PAYMENT = PagePath.CHECKOUT_PAYMENT;
+  static const ORDER = PagePath.ORDER;
 }
 
 abstract class PagePath {
@@ -20,4 +22,6 @@ abstract class PagePath {
   static const CHANGE_PASSWORD = '/change-password';
   static const WIDGET_TREE = '/widget-tree';
   static const CHAT_ROOM = '/chat-room';
+  static const CHECKOUT_PAYMENT = '/checkout-payment';
+  static const ORDER = '/order';
 }

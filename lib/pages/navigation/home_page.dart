@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -82,35 +81,15 @@ class _HomePageState extends State<HomePage> {
                   //ini manggil class Dimen biar jaraknya responsive
                   height: Dimen(context).height * 0.01,
                 ),
-                AspectRatio(
-                  aspectRatio: 10 / 5,
-                  child: CarouselSlider(
-                      items: _carouselImage
-                          .map((item) => Container(
-                                decoration: const BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                                child: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Image.network(
-                                          item,
-                                          fit: BoxFit.contain,
-                                          width: Dimen(context).width,
-                                        ),
-                                      ],
-                                    )),
-                              ))
-                          .toList(),
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        aspectRatio: 2.0,
-                        enlargeCenterPage: true,
-                        autoPlayInterval: const Duration(seconds: 3),
-                      )),
+                SizedBox(
+                  child: Text(
+                      "Mari kita jaga kesehatan hewan ternak dengan memberikan pakan seimbang, menjaga kebersihan lingkungan, melakukan vaksinasi,memberikan air bersih, dan memantau kesehatan secara teratur.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                          color: Colors.black,
+                          wordSpacing: 2,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal)),
                 ),
               ],
             ),

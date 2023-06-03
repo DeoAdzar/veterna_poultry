@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:veterna_poultry/pages/controller/product_controller.dart';
+import 'package:veterna_poultry/pages/model/product_model.dart';
+import 'package:veterna_poultry/utils/currency_format.dart';
 import 'package:veterna_poultry/utils/dimen.dart';
 import 'package:veterna_poultry/utils/my_colors.dart';
+import 'package:veterna_poultry/utils/pages.dart';
 import 'package:veterna_poultry/widgets/button_white_radius_25.dart';
 import 'package:veterna_poultry/widgets/show_snackbar.dart';
 
@@ -17,14 +19,14 @@ class CartTotalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Container(
           width: Dimen(context).width,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: MyColors.mainColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
           ),
           child: Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.maximize_rounded,
                 color: Colors.grey,
                 size: 50,
@@ -65,7 +67,7 @@ class CartTotalPage extends StatelessWidget {
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "Rp.${controller.total}",
+                    CurrencyFormat.convertToIdr(controller.total),
                     style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 18,
@@ -84,7 +86,22 @@ class CartTotalPage extends StatelessWidget {
                       ShowSnackbar.snackBarError(
                           "Mohon tambahkan setidaknya 1 barang");
                     } else {
-                      ShowSnackbar.snackBarSuccess("Goto Checkout");
+                      List listData = [];
+                      Product product;
+                      for (var i = 0; i < controller.products.length; i++) {
+                        product = controller.products.keys.toList()[i];
+                        int qty = controller.products.values.toList()[i];
+                        listData.add({
+                          "productTitle": product.title,
+                          "productQuantity": qty,
+                          "productTotalPrice": qty * product.price,
+                          "productImage": product.imgPath,
+                        });
+                      }
+                      Get.toNamed(AppPages.CHECKOUT_PAYMENT, arguments: {
+                        "data": listData,
+                        "totalPriceAll": controller.total
+                      });
                     }
                   })
             ],

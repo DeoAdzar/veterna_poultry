@@ -1,15 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+import 'package:veterna_poultry/db/database_methods.dart';
+import 'package:veterna_poultry/utils/pages.dart';
 import 'package:veterna_poultry/widgets/button_blue_radius_25.dart';
+import 'package:veterna_poultry/widgets/show_snackbar.dart';
 
 import '../../db/auth.dart';
-import '../../db/database_methods.dart';
 import '../../utils/dimen.dart';
 import '../../widgets/input_text.dart';
-import '../../widgets/show_snackbar.dart';
 
 class ChangeProfilePage extends StatefulWidget {
   const ChangeProfilePage({Key? key}) : super(key: key);
@@ -19,34 +25,74 @@ class ChangeProfilePage extends StatefulWidget {
 }
 
 class _ChangeProfilePageState extends State<ChangeProfilePage> {
-  final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerPhone = TextEditingController();
-  final TextEditingController _controllerAddress = TextEditingController();
-  late String tempName, tempPhone, tempAddress;
-
+  String tempName = Get.arguments['profileName'],
+      tempPhone = Get.arguments['profilePhone'],
+      tempAddress = Get.arguments['profileAddress'],
+      tempImage = Get.arguments['profileImage'];
+  late final TextEditingController _controllerName;
+  late final TextEditingController _controllerPhone;
+  late final TextEditingController _controllerAddress;
   final User? user = Auth().currentUser;
+  File? imageFile;
 
-  Widget getDataUser() {
-    return FutureBuilder<DocumentSnapshot>(
-      future: DatabaseMethod().getUserFromDB(user?.uid),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return ShowSnackbar.snackBarError("Something went wrong");
+  @override
+  void initState() {
+    _controllerName = TextEditingController(text: tempName);
+    _controllerPhone = TextEditingController(text: tempPhone);
+    _controllerAddress = TextEditingController(text: tempAddress);
+    super.initState();
+  }
+
+  takePicture() async {
+    ImagePicker picker = ImagePicker();
+
+    await picker.pickImage(source: ImageSource.camera, imageQuality: 25).then(
+      (xFile) {
+        if (xFile != null) {
+          setState(() {
+            imageFile = File(xFile.path);
+          });
         }
+      },
+    );
+  }
 
-        if (snapshot.hasData && !snapshot.data!.exists) {
-          return ShowSnackbar.snackBarError("User not found");
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          tempName = data['name'];
-          tempPhone = data['phone'];
-          tempAddress = data['address'];
-          return Container(
-            margin: EdgeInsets.only(left: 5, right: 5),
+  Widget showData() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () {
+              takePicture();
+            },
+            child: Container(
+              height: 125,
+              width: 125,
+              margin: const EdgeInsets.all(18),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(180.0),
+                  child: tempImage == ""
+                      ? const Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/thumbnail.png'),
+                        )
+                      : imageFile != null
+                          ? Image(
+                              fit: BoxFit.cover, image: FileImage(imageFile!))
+                          : Image(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(tempImage))),
+            ),
+          ),
+          SizedBox(
+            //ini manggil class dimen biar jaraknya responsive
+            height: Dimen(context).height * 0.05,
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 5, right: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -63,7 +109,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                 ),
                 InputText(
                   controller: _controllerName,
-                  text: data['name'],
+                  text: "Nama Lengkap",
                   textInputType: TextInputType.name,
                   height: 55,
                   verticalCenter: false,
@@ -85,7 +131,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                 ),
                 InputText(
                   controller: _controllerPhone,
-                  text: data['phone'],
+                  text: "No. Handphone",
                   textInputType: TextInputType.phone,
                   height: 55,
                   verticalCenter: false,
@@ -107,18 +153,84 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                 ),
                 InputText(
                   controller: _controllerAddress,
-                  text: data['address'],
+                  text: "Alamat",
                   textInputType: TextInputType.streetAddress,
                   height: 100,
                   verticalCenter: true,
                 ),
               ],
             ),
-          );
-        }
-        return CircularProgressIndicator();
-      },
+          ),
+          SizedBox(
+            //ini manggil class Dimen biar jaraknya responsive
+            height: Dimen(context).height * 0.03,
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 15, right: 15),
+            child: ButtonBlueRadius25(
+                text: "Simpan",
+                onTap: () {
+                  showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (_) {
+                        return const Dialog(
+                          // The background colordire
+                          backgroundColor: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // The loading indicator
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                // Some text
+                                Text('Loading...')
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                  sendToDB();
+                }),
+          )
+        ],
+      ),
     );
+  }
+
+  void sendToDB() async {
+    String fileName = const Uuid().v1();
+    String? imageUrl;
+    Map<String, dynamic> userInfoMap;
+    var ref =
+        FirebaseStorage.instance.ref().child('profile').child("$fileName.jpg");
+    if (imageFile != null) {
+      await ref.putFile(imageFile!);
+      imageUrl = await ref.getDownloadURL();
+      userInfoMap = {
+        "name": _controllerName.text,
+        "phone": _controllerPhone.text,
+        "address": _controllerAddress.text,
+        "img_path": imageUrl,
+      };
+    } else {
+      userInfoMap = {
+        "name": _controllerName.text,
+        "phone": _controllerPhone.text,
+        "address": _controllerAddress.text,
+      };
+    }
+    await DatabaseMethod()
+        .firestore
+        .collection("users")
+        .doc(Auth().currentUser!.uid)
+        .update(userInfoMap);
+    Get.offAllNamed(AppPages.HOME);
+    ShowSnackbar.snackBarSuccess("Berhasil update data");
   }
 
   @override
@@ -143,43 +255,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    margin: const EdgeInsets.all(18),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(180.0),
-                        child: const Image(
-                          image: AssetImage('assets/thumbnail.png'),
-                        )),
-                  ),
-                ),
-                SizedBox(
-                  //ini manggil class dimen biar jaraknya responsive
-                  height: Dimen(context).height * 0.05,
-                ),
-                getDataUser(),
-                SizedBox(
-                  //ini manggil class Dimen biar jaraknya responsive
-                  height: Dimen(context).height * 0.06,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 15, right: 15),
-                  child: ButtonBlueRadius25(text: "Simpan", onTap: () {}),
-                )
-              ],
-            ),
-          ),
-        ),
+        child: SafeArea(child: showData()),
       ),
     );
   }

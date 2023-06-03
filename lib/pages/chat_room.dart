@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:veterna_poultry/db/notification_methods.dart';
 
 import '../db/auth.dart';
 import '../db/database_methods.dart';
@@ -24,11 +25,12 @@ class ChatroomPage extends StatefulWidget {
 class _ChatroomPageState extends State<ChatroomPage> {
   final TextEditingController _message = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  String? conversationId;
+  String? conversationId, fcmToken;
   File? imageFile;
   late String? name, img;
   final String adminId = "dSlbzJm8fnQNyg07fLmSfHquuX83";
   int chatLength = 0;
+
   String chatRoomId(String user1) {
     return user1;
   }
@@ -36,21 +38,21 @@ class _ChatroomPageState extends State<ChatroomPage> {
   Future getImage() async {
     ImagePicker picker = ImagePicker();
 
-    await picker
-        .pickImage(source: ImageSource.gallery, imageQuality: 25)
-        .then((xFile) {
-      if (xFile != null) {
-        imageFile = File(xFile.path);
-        uploadImage();
-      }
-    });
+    await picker.pickImage(source: ImageSource.gallery, imageQuality: 25).then(
+      (xFile) {
+        if (xFile != null) {
+          imageFile = File(xFile.path);
+          uploadImage();
+        }
+      },
+    );
   }
 
   Future<void> _getUserName() async {
     DatabaseMethod()
         .firestore
         .collection('users')
-        .doc(await Auth().currentUser?.uid)
+        .doc(Auth().currentUser?.uid)
         .get()
         .then((value) {
       setState(() {
@@ -60,12 +62,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
     });
   }
 
+  void getFcmToken() async {
+    fcmToken =
+        await NotificationsMethod.getFirebaseMessagingTokenFromUser(adminId);
+  }
+
   @override
   void initState() {
     _getUserName();
-    Future.delayed(Duration(milliseconds: 200)).then((value) {
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
       scrollMax();
     });
+    getFcmToken();
     super.initState();
   }
 
@@ -91,6 +99,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         .child('chat/images')
         .child("$fileName.jpg");
 
+    // ignore: body_might_complete_normally_catch_error
     var uploadTask = await ref.putFile(imageFile!).catchError((error) async {
       await DatabaseMethod()
           .firestore
@@ -114,12 +123,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
           .doc(fileName)
           .update({"message": imageUrl});
 
-      print(imageUrl);
+      if (fcmToken != "") {
+        await NotificationsMethod.sendPushNotificationImage(
+            fcmToken, name, imageUrl);
+      }
     }
   }
 
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
+      String tempMessage = _message.text;
       Map<String, dynamic> messages = {
         "sendby": Auth().currentUser!.uid,
         "message": _message.text,
@@ -130,6 +143,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
       if (conversationId != null) {
         Map<String, dynamic> update = {
           "lastMessage": _message.text,
+          "senderImage": img,
+          "senderName": name,
           "time": FieldValue.serverTimestamp(),
         };
         updateConversation(update);
@@ -145,7 +160,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
         };
         addConversation(add);
       }
-
       _message.clear();
       await DatabaseMethod()
           .firestore
@@ -153,6 +167,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
           .doc(chatRoomId(Auth().currentUser!.uid))
           .collection('chats')
           .add(messages);
+      if (fcmToken != "") {
+        await NotificationsMethod.sendPushNotificationText(
+            fcmToken, name, tempMessage);
+        tempMessage = "";
+      }
 
       // scrollMax();
     }
@@ -189,19 +208,19 @@ class _ChatroomPageState extends State<ChatroomPage> {
         .where("receiverId", isEqualTo: receiverId)
         .get()
         .then((value) {
-      if (value.docs.length > 0) {
+      if (value.docs.isNotEmpty) {
         conversationId = value.docs[0].id;
       }
     });
   }
 
   void scrollMax() {
-    Future.delayed(Duration(seconds: 1)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       if (_scrollController.hasClients) {
         final position = _scrollController.position.maxScrollExtent;
         _scrollController.animateTo(
           position,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       }
@@ -273,11 +292,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       checkConversationId(snapshot.data!.docs.length);
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          if (chatLength != snapshot.data!.docs.length)
+                          if (chatLength != snapshot.data!.docs.length) {
                             scrollMax();
+                          }
                           chatLength = snapshot.data!.docs.length;
                           Map<String, dynamic> map = snapshot.data!.docs[index]
                               .data() as Map<String, dynamic>;

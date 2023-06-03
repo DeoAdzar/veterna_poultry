@@ -165,15 +165,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           barrierDismissible: false,
                           context: context,
                           builder: (_) {
-                            return Dialog(
+                            return const Dialog(
                               // The background colordire
                               backgroundColor: Colors.white,
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
+                                  children: [
                                     // The loading indicator
                                     CircularProgressIndicator(),
                                     SizedBox(

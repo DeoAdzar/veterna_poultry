@@ -11,8 +11,6 @@ class ProductController extends GetxController {
       if (_products[product] <= 4) {
         _products[product] += 1;
         incQuantity();
-        ShowSnackbar.snackBarSuccess(
-            "Berhasil menambahkan ${product.title} keranjang");
       } else {
         ShowSnackbar.snackBarError("Item dalam maksimal pembelian");
       }
@@ -33,6 +31,11 @@ class ProductController extends GetxController {
       _products[product] -= 1;
     }
     decQuantity();
+  }
+
+  void removeAll() {
+    _products.clear();
+    _quantity = RxInt(0);
   }
 
   get quantity => _quantity;

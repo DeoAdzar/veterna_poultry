@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:veterna_poultry/db/notification_methods.dart';
 import 'package:veterna_poultry/utils/pages.dart';
 
 import '../widgets/show_snackbar.dart';
@@ -47,6 +48,7 @@ class Auth {
       //     }
       //   },
       // );
+      await NotificationsMethod.updateFirebaseMessagingToken();
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       ShowSnackbar.snackBarError(e.message.toString());
@@ -73,6 +75,7 @@ class Auth {
       };
 
       DatabaseMethod().addUserInfoToDB(currentUser!.uid, userInfoMap);
+      await NotificationsMethod.updateFirebaseMessagingToken();
       ShowSnackbar.snackBarNormal('Congratulation Account Created');
       Get.offAllNamed(AppPages.HOME);
     } on FirebaseAuthException catch (e) {
