@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> signOut(BuildContext context) async {
     await NotificationsMethod.setFirebaseMessagingToken("");
     // ignore: use_build_context_synchronously
-    await Auth().signOut(context: context);
+    await Auth().signOut(context: context, message: 'Logout Successfully');
   }
 
   showAlertDialog(BuildContext context) {

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:veterna_poultry/db/auth.dart';
+import 'package:veterna_poultry/utils/pages.dart';
 
 import '../../db/database_methods.dart';
 import '../../utils/dimen.dart';
@@ -13,6 +15,7 @@ class OrderPending extends StatelessWidget {
   String readTimestamp(Timestamp timestamp) {
     var now = DateTime.now();
     var format = DateFormat('HH:mm');
+    var day = DateFormat('EEE, dd-MM-yyy');
     var date = DateTime.parse(timestamp.toDate().toString());
     var diff = now.difference(date);
     var time = '';
@@ -28,11 +31,7 @@ class OrderPending extends StatelessWidget {
         time = '${diff.inDays} days ago';
       }
     } else {
-      if (diff.inDays == 7) {
-        time = '${(diff.inDays / 7).floor()} week ago';
-      } else {
-        time = '${(diff.inDays / 7).floor()} weeks ago';
-      }
+      time = day.format(date);
     }
     return time;
   }
@@ -60,7 +59,10 @@ class OrderPending extends StatelessWidget {
                 },
               );
             } else {
-              return Container();
+              return Container(
+                margin: EdgeInsets.only(top: Get.height * 0.02),
+                child: Center(child: Text("No data yet")),
+              );
             }
           },
         ),
@@ -71,7 +73,10 @@ class OrderPending extends StatelessWidget {
   Widget item(String id, Map<String, dynamic> map, BuildContext context) {
     List data = map['listProduct'];
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Get.toNamed(AppPages.DETAIL_ORDER,
+            arguments: {"listData": data, "totalPrice": map['totalPrice']});
+      },
       child: Container(
         width: Dimen(context).width,
         padding: const EdgeInsets.all(15),

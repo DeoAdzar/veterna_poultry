@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:veterna_poultry/pages/cart_page.dart';
 import 'package:veterna_poultry/pages/chat_room.dart';
 import 'package:veterna_poultry/pages/checkout_payment_page.dart';
+import 'package:veterna_poultry/pages/detail_order.dart';
 import 'package:veterna_poultry/pages/forget_password_page.dart';
 import 'package:veterna_poultry/pages/login_page.dart';
 import 'package:veterna_poultry/pages/navigation/nav_bar.dart';
@@ -28,5 +29,6 @@ class AppRoutes {
         name: PagePath.CHANGE_PASSWORD, page: () => const ChangePasswordPage()),
     GetPage(name: PagePath.CHECKOUT_PAYMENT, page: () => CheckoutPaymentPage()),
     GetPage(name: PagePath.ORDER, page: () => const TabViewPage()),
+    GetPage(name: PagePath.DETAIL_ORDER, page: () => DetailOrder()),
   ];
 }

@@ -98,13 +98,12 @@ class Auth {
     }
   }
 
-  Future<void> signOut({
-    required BuildContext context,
-  }) async {
+  Future<void> signOut(
+      {required BuildContext context, required String message}) async {
     try {
       await _firebaseAuth.signOut();
       Get.offAllNamed(AppPages.LOGIN);
-      ShowSnackbar.snackBarSuccess('Logout Succesfully');
+      ShowSnackbar.snackBarSuccess(message);
     } on FirebaseAuthException catch (e) {
       ShowSnackbar.snackBarError(e.message.toString());
     }

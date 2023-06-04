@@ -10,6 +10,7 @@ class AppPages {
   static const CHAT_ROOM = PagePath.CHAT_ROOM;
   static const CHECKOUT_PAYMENT = PagePath.CHECKOUT_PAYMENT;
   static const ORDER = PagePath.ORDER;
+  static const DETAIL_ORDER = PagePath.DETAIL_ORDER;
 }
 
 abstract class PagePath {
@@ -24,4 +25,5 @@ abstract class PagePath {
   static const CHAT_ROOM = '/chat-room';
   static const CHECKOUT_PAYMENT = '/checkout-payment';
   static const ORDER = '/order';
+  static const DETAIL_ORDER = '/detail-order';
 }
