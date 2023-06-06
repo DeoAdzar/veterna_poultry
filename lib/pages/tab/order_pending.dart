@@ -50,14 +50,21 @@ class OrderPending extends StatelessWidget {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.data != null) {
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> map =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return item(snapshot.data!.docs[index].id, map, context);
-                },
-              );
+              if (snapshot.data!.docs.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> map = snapshot.data!.docs[index].data()
+                        as Map<String, dynamic>;
+                    return item(snapshot.data!.docs[index].id, map, context);
+                  },
+                );
+              } else {
+                return Container(
+                  margin: EdgeInsets.only(top: Get.height * 0.02),
+                  child: Center(child: Text("No data yet")),
+                );
+              }
             } else {
               return Container(
                 margin: EdgeInsets.only(top: Get.height * 0.02),
@@ -164,7 +171,7 @@ class OrderPending extends StatelessWidget {
                   height: Dimen(context).height * 0.08,
                 ),
                 Text(
-                  'menunggu konfirmasi',
+                  'Menunggu konfirmasi',
                   style: GoogleFonts.inter(
                       color: Colors.black,
                       fontSize: 12.0,
