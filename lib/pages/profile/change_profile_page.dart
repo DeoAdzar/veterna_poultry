@@ -74,14 +74,13 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
               margin: const EdgeInsets.all(18),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(180.0),
-                  child: tempImage == ""
-                      ? const Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage('assets/thumbnail.png'),
-                        )
-                      : imageFile != null
-                          ? Image(
-                              fit: BoxFit.cover, image: FileImage(imageFile!))
+                  child: imageFile != null
+                      ? Image(fit: BoxFit.cover, image: FileImage(imageFile!))
+                      : tempImage == ""
+                          ? const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/thumbnail.png'),
+                            )
                           : Image(
                               fit: BoxFit.cover,
                               image: NetworkImage(tempImage))),

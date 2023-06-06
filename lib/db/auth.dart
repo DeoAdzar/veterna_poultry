@@ -70,7 +70,7 @@ class Auth {
         "name": name,
         "phone": phone,
         "address": address,
-        "img_path": null,
+        "img_path": "",
         "role": "user"
       };
 
