@@ -8,7 +8,7 @@ class ProductController extends GetxController {
 
   void addProduct(Product product) {
     if (_products.containsKey(product)) {
-      if (_products[product] <= 4) {
+      if (_products[product] <= 29) {
         _products[product] += 1;
         incQuantity();
       } else {
