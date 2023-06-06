@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -246,24 +247,55 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
-                                        const SizedBox(
-                                          width: 50,
-                                          height: 50,
-                                          child: Image(
-                                            image:
-                                                AssetImage('assets/bank.png'),
-                                          ),
+                                        Row(
+                                          children: [
+                                            const SizedBox(
+                                              width: 50,
+                                              height: 50,
+                                              child: Image(
+                                                image: AssetImage(
+                                                    'assets/bank.png'),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  Dimen(context).width * 0.02,
+                                            ),
+                                            InkWell(
+                                              onTap: () async {
+                                                try {
+                                                  await Clipboard.setData(
+                                                    const ClipboardData(
+                                                        text: "124123123"),
+                                                  );
+                                                  ShowSnackbar.snackBarNormal(
+                                                      "No rekening di salin ");
+                                                } catch (e) {
+                                                  ShowSnackbar.snackBarError(
+                                                      e.toString());
+                                                }
+                                              },
+                                              child: Text("124123123",
+                                                  style: GoogleFonts.inter(
+                                                      color: Colors.black,
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            )
+                                          ],
                                         ),
-                                        SizedBox(
-                                          height: Dimen(context).height * 0.02,
-                                        ),
-                                        Text("124123123",
+                                        Text(
+                                            "*tekan no. rekening untuk menyalin",
                                             style: GoogleFonts.inter(
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold))
+                                                color: Colors.grey,
+                                                fontSize: 10.0,
+                                                fontWeight: FontWeight.bold)),
                                       ],
                                     ),
                                     SizedBox(
