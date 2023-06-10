@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,10 +43,30 @@ class CatalogProductCard extends StatelessWidget {
                 color: Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image(
-                  image: NetworkImage(cartController.products[index].imgPath),
-                )),
+              borderRadius: BorderRadius.circular(10.0),
+              child: CachedNetworkImage(
+                imageUrl: cartController.products[index].imgPath,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(180.0),
+                      border:
+                          Border.all(width: 2, color: Colors.grey.shade200)),
+                  child: const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Center(child: CircularProgressIndicator())),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            ),
           ),
           SizedBox(
             width: Dimen(context).width * 0.02,

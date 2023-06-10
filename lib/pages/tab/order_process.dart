@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class OrderProcess extends StatelessWidget {
   String readTimestamp(Timestamp timestamp) {
     var now = DateTime.now();
     var format = DateFormat('HH:mm');
-    var day = DateFormat('EEE, dd-MM-yyy');
+    var day = DateFormat('EEEE, dd-MM-yyy', "id_ID");
     var date = DateTime.parse(timestamp.toDate().toString());
     var diff = now.difference(date);
     var time = '';
@@ -51,12 +52,22 @@ class OrderProcess extends StatelessWidget {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.data != null) {
               if (snapshot.data!.docs.isNotEmpty) {
+                var listData = snapshot.data!.docs;
+                listData.sort(((b, a) {
+                  var adate = Timestamp.now();
+                  var bdate = Timestamp.now();
+                  if (a['time'] != null && b['time'] != null) {
+                    adate = a['time'];
+                    bdate = b['time'];
+                  }
+                  return adate.compareTo(bdate);
+                }));
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    Map<String, dynamic> map = snapshot.data!.docs[index].data()
-                        as Map<String, dynamic>;
-                    return item(snapshot.data!.docs[index].id, map, context);
+                    Map<String, dynamic> map =
+                        listData[index].data() as Map<String, dynamic>;
+                    return item(listData[index].id, map, context);
                   },
                 );
               } else {
@@ -68,7 +79,7 @@ class OrderProcess extends StatelessWidget {
             } else {
               return Container(
                 margin: EdgeInsets.only(top: Get.height * 0.02),
-                child: Center(child: Text("No data yet")),
+                child: Center(child: CircularProgressIndicator()),
               );
             }
           },
@@ -105,10 +116,30 @@ class OrderProcess extends StatelessWidget {
                   color: Colors.grey,
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
               child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image(
-                    image: NetworkImage(data[0]['productImage']),
-                  )),
+                borderRadius: BorderRadius.circular(10.0),
+                child: CachedNetworkImage(
+                  imageUrl: data[0]['productImage'],
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(180.0),
+                        border:
+                            Border.all(width: 2, color: Colors.grey.shade200)),
+                    child: const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Center(child: CircularProgressIndicator())),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
             ),
             SizedBox(
               width: Dimen(context).width * 0.02,

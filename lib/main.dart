@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:veterna_poultry/utils/routes.dart';
 import 'package:veterna_poultry/utils/widget_tree.dart';
 
@@ -12,6 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Future.delayed(const Duration(seconds: 3));
+  await initializeDateFormatting('id_ID', null);
   FlutterNativeSplash.remove;
   runApp(const MyApp());
 }

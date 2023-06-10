@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -124,18 +125,45 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 125,
                               margin: const EdgeInsets.all(18),
                               child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(180.0),
-                                  child: snapshot.data?['img_path'] == null ||
-                                          snapshot.data?['img_path'] == ''
-                                      ? const Image(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              'assets/thumbnail.png'),
-                                        )
-                                      : Image(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(
-                                              snapshot.data?['img_path']))),
+                                borderRadius: BorderRadius.circular(180.0),
+                                child: snapshot.data?['img_path'] == null ||
+                                        snapshot.data?['img_path'] == ''
+                                    ? const Image(
+                                        fit: BoxFit.cover,
+                                        image:
+                                            AssetImage('assets/thumbnail.png'),
+                                      )
+                                    : CachedNetworkImage(
+                                        imageUrl: snapshot.data?['img_path'],
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(180.0),
+                                              border: Border.all(
+                                                  width: 2,
+                                                  color: Colors.grey.shade200)),
+                                          child: const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: Center(
+                                                  child:
+                                                      CircularProgressIndicator())),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -192,7 +220,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       );
                     } else {
-                      return Container();
+                      return SizedBox(
+                        height: Get.height * 0.8,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     }
                   })),
         ),
