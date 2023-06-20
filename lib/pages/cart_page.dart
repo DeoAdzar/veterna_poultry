@@ -18,14 +18,12 @@ class CartPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new),
           color: Colors.black,
         ),
-        title: Text(
-          "Keranjang",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-              color: Colors.black,
-              fontSize: 20.0,
-              fontWeight: FontWeight.normal),
-        ),
+        title: Text("Keranjang",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+                color: Colors.black,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold)),
         elevation: 0.0,
       ),
       body: SafeArea(

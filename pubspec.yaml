@@ -53,6 +53,12 @@ dependencies:
   http: ^0.13.6
   shared_preferences: ^2.1.1
   cached_network_image: ^3.2.3
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon_apps.png"
 
 flutter_native_splash:
   color: "#223f93"
