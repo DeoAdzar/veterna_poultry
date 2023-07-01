@@ -1,4 +1,4 @@
-package com.example.veterna_poultry
+package com.shabrina.veterna_poultry
 
 import io.flutter.embedding.android.FlutterActivity
 

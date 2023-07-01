@@ -14,6 +14,72 @@
       },
       "oauth_client": [
         {
+          "client_id": "147413446050-1o33mea01k1n6ogacfstksmfqi4hlb70.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.veterna_poultry",
+            "certificate_hash": "8eb94aee4f5bf198369fc53f176e338e6e71fc44"
+          }
+        },
+        {
+          "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF48tQF-s095cXxq-4wdn8CmX6wTJUbuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147413446050:android:2c0dd634314fe797d456fb",
+        "android_client_info": {
+          "package_name": "com.example.veterna_poultry_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF48tQF-s095cXxq-4wdn8CmX6wTJUbuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147413446050:android:04fd8eebb353e3a9d456fb",
+        "android_client_info": {
+          "package_name": "com.shabrina.veterna_poultry"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "147413446050-4h2nq09h60vrdj4rn6ej94cpr4m6m6o6.apps.googleusercontent.com",
           "client_type": 3
         }
